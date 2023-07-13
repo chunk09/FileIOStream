@@ -8,11 +8,6 @@ namespace FileIOStream.FileIOStream
 {
 	internal class CreateFile
 	{
-		/// <summary>
-		/// 지정한 경로에 파일만 생성하는 함수
-		/// </summary>
-		/// <param name="path">상대경로 매개변수</param>
-		/// <param name="encoding"></param>
 		public void Create(string path, Encoding encoding)
 		{
 			if (File.Exists(path))
@@ -26,14 +21,8 @@ namespace FileIOStream.FileIOStream
 
 			Console.WriteLine($"{path} 경로에 파일이 생성되었습니다.");
 		}
-
-		/// <summary>
-		/// 지정한 경로에 내용이 있는 파일을 저장, 파일이 있으면 덮어씌움
-		/// </summary>
-		/// <param name="path">상대경로 매개변수</param>
-		/// <param name="content">파일에 작성할 내용</param>
-		/// <param name="encoding"></param>
-		public void CreateWithWrite(string path, string content, Encoding encoding)
+		
+		public void Create(string path, string content, Encoding encoding)
 		{
 			if (File.Exists(path))
 			{
@@ -47,7 +36,58 @@ namespace FileIOStream.FileIOStream
 			}
 		}
 
-		// 지정한 경로에 폴더가 없을 경우 폴더를 생성하고 그 폴더 안에 파일을 생성함
-		// 만들어야함
+		public void CreateWithDirectory(string path, Encoding encoding)
+		{
+			var splitPath = path.Split(@"\");
+			var dirPath = splitPath[0];
+
+			for (int i = 1; i < splitPath.Length - 1; i++)
+			{
+				dirPath = @$"{dirPath}\{splitPath[i]}";
+			}
+
+			Console.WriteLine($"dir : {dirPath}");
+
+			if (Directory.Exists(dirPath))
+			{
+				Console.WriteLine("지정한 경로에 폴더가 존재하기에 폴더를 생성하지 않고 원래 있던 폴더에 파일을 생성하겠습니다.");
+				File.WriteAllText(path, string.Empty, encoding);
+			}
+			else
+			{
+				Directory.CreateDirectory(dirPath);
+				Console.WriteLine(dirPath + " 경로에 폴더 생성");
+
+				File.WriteAllText(path, string.Empty, encoding);
+				Console.WriteLine("파일 생성 완료");
+			}
+		}
+
+		public void CreateWithDirectory(string path, string content, Encoding encoding)
+		{
+			var splitPath = path.Split(@"\");
+			var dirPath = splitPath[0];
+
+			for (int i = 1; i < splitPath.Length - 1; i++)
+			{
+				dirPath = @$"{dirPath}\{splitPath[i]}";
+			}
+
+			Console.WriteLine($"dir : {dirPath}");
+
+			if (Directory.Exists(dirPath))
+			{
+				Console.WriteLine("지정한 경로에 폴더가 존재하기에 폴더를 생성하지 않고 원래 있던 폴더에 파일을 생성하겠습니다.");
+				File.WriteAllText(path, content, encoding);
+			}
+			else
+			{
+				Directory.CreateDirectory(dirPath);
+				Console.WriteLine(dirPath + " 경로에 폴더 생성");
+
+				File.WriteAllText(path, content, encoding);
+				Console.WriteLine("파일 생성 완료");
+			}
+		}
 	}
 }
